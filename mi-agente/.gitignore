@@ -1,0 +1,15 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+.langgraph_api/
+.ipynb_checkpoints/
+langgraph-dev.log
+*.log
+node_modules/
+logs/
+credenciales/
+sesiones/
+dist/
+build/
+*.egg-info/
