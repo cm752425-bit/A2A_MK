@@ -24,6 +24,9 @@ copy .env.example .env
 
 Edita `.env` y reemplaza los valores ficticios. Nunca compartas ese archivo.
 
+El proyecto queda configurado para utilizar `gemini-3.5-flash-lite`. Debes
+proporcionar una clave válida en `MODEL_API_KEY` o `GOOGLE_API_KEY`.
+
 ## Variables de entorno
 
 | Variable | Uso |
@@ -31,7 +34,7 @@ Edita `.env` y reemplaza los valores ficticios. Nunca compartas ese archivo.
 | `GOOGLE_API_KEY` | Clave del proveedor Gemini para el agente existente. |
 | `MODEL_API_KEY` | Alias documentado para futuras integraciones de modelo. |
 | `AGENT_ACCESS_TOKEN` | Token requerido por `POST /chat`. |
-| `MODEL_NAME` | Modelo Gemini; por ejemplo `gemini-3.5-flash-lite`. |
+| `MODEL_NAME` | Modelo Gemini configurado: `gemini-3.5-flash-lite`. |
 | `HOST` | Host local; por defecto `127.0.0.1`. |
 | `PORT` | Puerto HTTP; por defecto `8000`. |
 | `A2A_VIAJES_URL` | URL del servidor LangGraph usado por el consumidor A2A. |
