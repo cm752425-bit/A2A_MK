@@ -1,3 +1,6 @@
+import os
+import uuid
+
 from langchain_core.messages import HumanMessage
 
 
@@ -12,8 +15,13 @@ def _message_text(message) -> str:
     return str(content)
 
 
-async def consultar_agente(message: str) -> str:
-    """Ejecuta el grafo real existente y devuelve su último mensaje."""
+async def consultar_agente(message: str, request_id: str | None = None) -> str:
+    """Ejecuta el agente real directamente o mediante el protocolo A2A."""
+    if os.getenv("AGENT_EXECUTION_MODE", "direct").lower() == "a2a":
+        from src.consumidor.a2a_cliente import consultar_viajes
+
+        return await consultar_viajes(message, request_id or str(uuid.uuid4()))
+
     # Se importa bajo demanda para que /health y la documentación funcionen
     # aunque todavía no se haya configurado la clave del proveedor.
     from src.agente_viajes.graph import graph

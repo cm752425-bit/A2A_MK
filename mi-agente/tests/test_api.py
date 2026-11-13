@@ -41,7 +41,7 @@ def test_chat_empty_message():
 
 
 def test_chat_authorized(monkeypatch):
-    async def fake_agent(message: str) -> str:
+    async def fake_agent(message: str, request_id: str | None = None) -> str:
         assert message == "consulta real de prueba"
         return "respuesta del agente"
 
@@ -59,7 +59,7 @@ def test_chat_authorized(monkeypatch):
 
 
 def test_chat_agent_error(monkeypatch):
-    async def failing_agent(message: str) -> str:
+    async def failing_agent(message: str, request_id: str | None = None) -> str:
         raise RuntimeError("fallo interno")
 
     monkeypatch.setattr(main, "consultar_agente", failing_agent)

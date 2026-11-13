@@ -124,4 +124,4 @@ async def consultar_viajes(texto: str, context_id: str) -> str:
         finally:
             await cliente.close()
     except Exception as error:
-        return f"Error consultando al agente de viajes: {error}"
+        raise RuntimeError(f"Error consultando al agente por A2A: {error}") from error

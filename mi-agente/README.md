@@ -5,6 +5,10 @@ protegida para consultarlo localmente. El agente usa la herramienta de apuntes
 que ya estaba implementada y puede exponerse también mediante A2A con
 `langgraph dev`.
 
+La opción elegida para la entrega es **Servicio FastAPI protegido**. En modo
+`a2a`, el recorrido es FastAPI → cliente A2A → servidor LangGraph → agente
+existente. Las evidencias y su plantilla están en `docs/EVIDENCIAS.md`.
+
 ## Requisitos
 
 - Windows 10/11 o Linux/macOS.
@@ -34,6 +38,7 @@ proporcionar una clave válida en `MODEL_API_KEY` o `GOOGLE_API_KEY`.
 | `GOOGLE_API_KEY` | Clave del proveedor Gemini para el agente existente. |
 | `MODEL_API_KEY` | Alias documentado para futuras integraciones de modelo. |
 | `AGENT_ACCESS_TOKEN` | Token requerido por `POST /chat`. |
+| `AGENT_EXECUTION_MODE` | `a2a` para usar el agente por A2A; `direct` para una prueba local directa. |
 | `MODEL_NAME` | Modelo Gemini configurado: `gemini-3.5-flash-lite`. |
 | `HOST` | Host local; por defecto `127.0.0.1`. |
 | `PORT` | Puerto HTTP; por defecto `8000`. |

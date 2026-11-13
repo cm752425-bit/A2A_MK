@@ -57,7 +57,7 @@ async def chat(request: ChatRequest, _: None = Depends(validar_token)) -> ChatRe
 
     request_id = str(uuid.uuid4())
     try:
-        response = await consultar_agente(message)
+        response = await consultar_agente(message, request_id)
     except TimeoutError as error:
         raise HTTPException(
             status_code=status.HTTP_504_GATEWAY_TIMEOUT,
