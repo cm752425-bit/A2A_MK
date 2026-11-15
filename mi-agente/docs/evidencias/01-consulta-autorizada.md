@@ -11,7 +11,7 @@
 
 ```json
 {
-  "message": "Explica qué es una propuesta de valor y cómo se evalúa"
+  "message": "Explica qué es un mercado objetivo"
 }
 ```
 
