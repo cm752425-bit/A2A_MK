@@ -9,6 +9,11 @@ La opción elegida para la entrega es **Servicio FastAPI protegido**. En modo
 `a2a`, el recorrido es FastAPI → cliente A2A → servidor LangGraph → agente
 existente. Las evidencias y su plantilla están en `docs/EVIDENCIAS.md`.
 
+## Integrantes y aportes
+
+- `cm752425-bit`: integración local de FastAPI, protección Bearer, conexión
+  A2A, pruebas, documentación y evidencias.
+
 ## Requisitos
 
 - Windows 10/11 o Linux/macOS.
@@ -57,8 +62,9 @@ La documentación interactiva está disponible en:
 - ReDoc: <http://127.0.0.1:8000/redoc>
 - Estado: <http://127.0.0.1:8000/health>
 
-En Swagger pulsa **Authorize**, escribe `Bearer` seguido del valor de
-`AGENT_ACCESS_TOKEN`, y prueba `POST /chat` con:
+En Swagger pulsa **Authorize** y escribe solamente el valor de
+`AGENT_ACCESS_TOKEN` (Swagger agrega automáticamente `Bearer`). Luego prueba
+`POST /chat` con:
 
 ```json
 {
