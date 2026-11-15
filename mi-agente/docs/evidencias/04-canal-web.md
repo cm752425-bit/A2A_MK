@@ -3,7 +3,7 @@
 ## Entorno y fecha
 
 - Entorno: LOCAL.
-- Fecha de ejecución visual: completar con la fecha de la captura.
+- Fecha de ejecución visual: 15 de noviembre de 2026.
 - Canal: frontend web propio.
 - URL: `http://127.0.0.1:8000/`.
 
@@ -25,10 +25,10 @@ Página web → POST /chat → cliente A2A → agente existente → respuesta we
 
 ## Solicitud de prueba
 
-Completar durante la captura:
+Consulta realizada:
 
 ```text
-Consulta: ______________________________________________
+Explica qué es un mercado objetivo
 ```
 
 ## Resultado esperado
@@ -38,9 +38,8 @@ agente y mostrar el estado de la operación junto con el `request_id`.
 
 ## Resultado obtenido
 
-La página web y su ruta raíz fueron verificadas automáticamente. La prueba
-visual de una consulta desde el navegador debe completarse con una captura
-propia del equipo.
+La página web mostró `Consulta completada (200)`, un `request_id` y una
+respuesta real del agente sobre el mercado objetivo.
 
 ## Captura requerida
 
