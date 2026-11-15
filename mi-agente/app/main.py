@@ -1,5 +1,6 @@
 import os
 import uuid
+from pathlib import Path
 
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, HTTPException, status
@@ -8,7 +9,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from app.schemas import ChatRequest, ChatResponse
 from app.services.agent_service import consultar_agente
 
-load_dotenv()
+load_dotenv(Path(__file__).resolve().parents[1] / ".env")
 
 app = FastAPI(
     title="API del agente de soluciones comerciales y marketing",

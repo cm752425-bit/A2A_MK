@@ -9,6 +9,7 @@ Requisito único: el estado del grafo debe tener la clave `messages` (MessagesSt
 El `contextId` de A2A se convierte en `thread_id`: la memoria por conversación viene gratis.
 """
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.agents import create_agent
@@ -16,7 +17,7 @@ from langchain.agents import create_agent
 from src.agente_viajes.herramientas import HERRAMIENTAS
 from src.agente_viajes.prompts import SYSTEM_VIAJES
 
-load_dotenv()
+load_dotenv(Path(__file__).resolve().parents[2] / ".env")
 
 modelo = ChatGoogleGenerativeAI(
     model=os.environ.get("MODEL_NAME") or os.environ.get("MODELO", "gemini-3.5-flash-lite"),

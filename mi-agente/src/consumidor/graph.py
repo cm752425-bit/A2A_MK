@@ -2,6 +2,7 @@
 import asyncio
 import os
 import uuid
+from pathlib import Path
 
 from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
@@ -13,7 +14,7 @@ from langchain.agents import create_agent
 from src.consumidor import a2a_cliente
 from src.consumidor.prompts import SYSTEM_CONVERSACIONAL
 
-load_dotenv()
+load_dotenv(Path(__file__).resolve().parents[2] / ".env")
 
 modelo = ChatGoogleGenerativeAI(
     model=os.environ.get("MODEL_NAME") or os.environ.get("MODELO", "gemini-3.5-flash-lite"),

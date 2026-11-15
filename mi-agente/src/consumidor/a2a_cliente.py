@@ -2,6 +2,7 @@
 import json
 import os
 import uuid
+from pathlib import Path
 
 import httpx
 from dotenv import load_dotenv
@@ -10,7 +11,7 @@ from a2a.client import A2ACardResolver, ClientConfig, create_client
 from a2a.helpers import get_artifact_text, get_message_text, new_text_message
 from a2a.types import Role, SendMessageRequest, TaskState
 
-load_dotenv()
+load_dotenv(Path(__file__).resolve().parents[2] / ".env")
 
 
 def _sin_kind(datos):
