@@ -17,6 +17,12 @@ def test_health():
     assert response.json()["status"] == "ok"
 
 
+def test_web_client():
+    response = client.get("/")
+    assert response.status_code == 200
+    assert "Agente de soluciones" in response.text
+
+
 def test_chat_without_token():
     response = client.post("/chat", json={"message": "hola"})
     assert response.status_code == 401

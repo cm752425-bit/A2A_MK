@@ -4,6 +4,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi.responses import FileResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from app.schemas import ChatRequest, ChatResponse
@@ -16,6 +17,7 @@ app = FastAPI(
     description="API protegida para consultar el agente LangGraph existente.",
     version="1.0.0",
 )
+WEB_CLIENT = Path(__file__).resolve().parent / "static" / "index.html"
 bearer = HTTPBearer(auto_error=False)
 
 
@@ -45,6 +47,11 @@ def validar_token(
 @app.get("/health", tags=["Estado"])
 async def health() -> dict[str, str]:
     return {"status": "ok", "service": "agent-api"}
+
+
+@app.get("/", include_in_schema=False)
+async def web_client() -> FileResponse:
+    return FileResponse(WEB_CLIENT, media_type="text/html")
 
 
 @app.post("/chat", response_model=ChatResponse, tags=["Agente"])

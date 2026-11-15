@@ -9,6 +9,9 @@ La opción elegida para la entrega es **Servicio FastAPI protegido**. En modo
 `a2a`, el recorrido es FastAPI → cliente A2A → servidor LangGraph → agente
 existente. Las evidencias y su plantilla están en `docs/EVIDENCIAS.md`.
 
+También se incluye un canal web propio en `/`. Es una interfaz local de chat,
+distinta de WhatsApp Web, que reutiliza el endpoint protegido `/chat`.
+
 ## Integrantes y aportes
 
 - `cm752425-bit`: integración local de FastAPI, protección Bearer, conexión
@@ -58,6 +61,7 @@ uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 
 La documentación interactiva está disponible en:
 
+- Canal web: <http://127.0.0.1:8000/>
 - Swagger: <http://127.0.0.1:8000/docs>
 - ReDoc: <http://127.0.0.1:8000/redoc>
 - Estado: <http://127.0.0.1:8000/health>
@@ -65,6 +69,10 @@ La documentación interactiva está disponible en:
 En Swagger pulsa **Authorize** y escribe solamente el valor de
 `AGENT_ACCESS_TOKEN` (Swagger agrega automáticamente `Bearer`). Luego prueba
 `POST /chat` con:
+
+También puedes abrir el canal web en `/`, introducir el token local en el campo
+de contraseña y enviar una consulta. El token no se guarda en el navegador y
+las claves del modelo nunca llegan al frontend.
 
 ```json
 {

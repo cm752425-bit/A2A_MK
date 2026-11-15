@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Agente de soluciones comerciales</title>
+    <style>
+      :root { font-family: system-ui, sans-serif; color: #17324d; background: #f4f7fa; }
+      body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
+      main { width: min(760px, calc(100% - 32px)); background: white; padding: 28px; border-radius: 14px; box-shadow: 0 8px 30px #17324d22; }
+      h1 { margin-top: 0; }
+      label { display: block; font-weight: 700; margin: 16px 0 6px; }
+      input, textarea, button { box-sizing: border-box; width: 100%; font: inherit; border-radius: 8px; padding: 11px; border: 1px solid #b9c7d4; }
+      textarea { min-height: 120px; resize: vertical; }
+      button { margin-top: 16px; background: #1677c8; color: white; border: 0; cursor: pointer; font-weight: 700; }
+      button:disabled { opacity: .6; cursor: wait; }
+      #status { min-height: 24px; margin-top: 16px; font-weight: 700; }
+      #response { white-space: pre-wrap; background: #f0f4f8; border-radius: 8px; padding: 16px; min-height: 80px; }
+      .hint { color: #526779; font-size: .92rem; }
+      a { color: #1677c8; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Agente de soluciones comerciales y marketing</h1>
+      <p class="hint">Canal web local: la consulta se envía a FastAPI y al agente existente mediante A2A.</p>
+      <label for="token">Token de acceso local</label>
+      <input id="token" type="password" autocomplete="off" placeholder="AGENT_ACCESS_TOKEN" />
+      <label for="message">Consulta</label>
+      <textarea id="message" placeholder="Escribe tu consulta..."></textarea>
+      <button id="send" type="button">Enviar consulta</button>
+      <div id="status" role="status"></div>
+      <h2>Respuesta</h2>
+      <div id="response">Aún no hay una respuesta.</div>
+      <p class="hint"><a href="/docs">Abrir Swagger</a></p>
+    </main>
+    <script>
+      const token = document.querySelector('#token');
+      const message = document.querySelector('#message');
+      const send = document.querySelector('#send');
+      const status = document.querySelector('#status');
+      const responseBox = document.querySelector('#response');
+
+      send.addEventListener('click', async () => {
+        const accessToken = token.value.trim();
+        const text = message.value.trim();
+        if (!accessToken || !text) {
+          status.textContent = 'Completa el token y la consulta.';
+          status.style.color = '#a33b00';
+          return;
+        }
+        send.disabled = true;
+        status.textContent = 'Consultando al agente...';
+        status.style.color = '#526779';
+        responseBox.textContent = '';
+        try {
+          const result = await fetch('/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${accessToken}` },
+            body: JSON.stringify({ message: text })
+          });
+          const body = await result.json();
+          if (!result.ok) throw new Error(body.detail || `Error HTTP ${result.status}`);
+          status.textContent = `Consulta completada (${result.status}). ID: ${body.request_id}`;
+          status.style.color = '#167044';
+          responseBox.textContent = body.response;
+        } catch (error) {
+          status.textContent = 'La consulta no pudo completarse.';
+          status.style.color = '#a33b00';
+          responseBox.textContent = error.message;
+        } finally {
+          send.disabled = false;
+        }
+      });
+    </script>
+  </body>
+</html>
