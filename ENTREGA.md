@@ -88,3 +88,15 @@ credenciales de despliegue.
 La app Heroku se llama `agente-mk-2026` y usa el modo `direct` en producción,
 porque no depende de un proceso `langgraph dev` local. Las variables sensibles
 deben configurarse en Heroku como Config Vars; no se guardan en el repositorio.
+
+URL pública:
+
+<https://agente-mk-2026-b4e407e65a92.herokuapp.com/>
+
+Swagger público:
+
+<https://agente-mk-2026-b4e407e65a92.herokuapp.com/docs>
+
+El despliegue fue verificado con HTTP 200 en `/`, `/health` y `/docs`. Para
+ejecutar `/chat` aún deben configurarse en Heroku una clave nueva del proveedor
+Gemini y un `AGENT_ACCESS_TOKEN` nuevo; esos valores no se incluyen aquí.
