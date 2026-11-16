@@ -82,3 +82,9 @@ credenciales de despliegue.
 - El modo A2A requiere que estén activos los dos procesos locales.
 - El contenido de los apuntes del agente es local y el caso de marketing es
   ficticio e ilustrativo.
+
+## Despliegue Heroku opcional
+
+La app Heroku se llama `agente-mk-2026` y usa el modo `direct` en producción,
+porque no depende de un proceso `langgraph dev` local. Las variables sensibles
+deben configurarse en Heroku como Config Vars; no se guardan en el repositorio.
