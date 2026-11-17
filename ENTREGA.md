@@ -97,6 +97,7 @@ Swagger público:
 
 <https://agente-mk-2026-b4e407e65a92.herokuapp.com/docs>
 
-El despliegue fue verificado con HTTP 200 en `/`, `/health` y `/docs`. Para
-ejecutar `/chat` aún deben configurarse en Heroku una clave nueva del proveedor
-Gemini y un `AGENT_ACCESS_TOKEN` nuevo; esos valores no se incluyen aquí.
+El despliegue fue verificado con HTTP 200 en `/`, `/health` y `/docs`. También
+se verificó `/chat`: sin token responde `401 Unauthorized` y con el token válido
+responde `200 OK` con una consulta real. Los valores sensibles se mantienen
+únicamente como Config Vars privadas de Heroku y no se incluyen aquí.
