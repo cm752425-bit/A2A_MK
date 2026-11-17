@@ -3,7 +3,7 @@ import uuid
 from pathlib import Path
 
 from dotenv import load_dotenv
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import Body, Depends, FastAPI, HTTPException, status
 from fastapi.responses import FileResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
@@ -19,6 +19,9 @@ app = FastAPI(
 )
 WEB_CLIENT = Path(__file__).resolve().parent / "static" / "index.html"
 bearer = HTTPBearer(auto_error=False)
+PUBLIC_URL = os.getenv(
+    "PUBLIC_AGENT_URL", "https://agente-mk-2026-b4e407e65a92.herokuapp.com"
+).rstrip("/")
 
 
 def validar_token(
@@ -47,6 +50,89 @@ def validar_token(
 @app.get("/health", tags=["Estado"])
 async def health() -> dict[str, str]:
     return {"status": "ok", "service": "agent-api"}
+
+
+@app.get("/salud", tags=["Estado"])
+async def salud() -> dict[str, str]:
+    """Endpoint de salud solicitado por el coordinador."""
+    return {"status": "ok", "service": "agente-mk"}
+
+
+@app.get("/.well-known/agent-card.json", tags=["A2A"])
+async def agent_card() -> dict:
+    """Publica la ficha A2A sin exponer credenciales."""
+    return {
+        "name": "Agente MK — Soluciones comerciales y marketing",
+        "description": "Agente especializado en ingeniería comercial y marketing.",
+        "url": f"{PUBLIC_URL}/message/send",
+        "version": "1.0.0",
+        "capabilities": {"streaming": False, "pushNotifications": False},
+        "defaultInputModes": ["text"],
+        "defaultOutputModes": ["text"],
+        "authentication": {
+            "schemes": ["bearer"],
+            "credentials": "Authorization: Bearer <AGENT_ACCESS_TOKEN>",
+        },
+        "skills": [
+            {
+                "id": "marketing-comercial",
+                "name": "Ingeniería comercial y marketing",
+                "description": "Responde consultas sobre necesidades, propuesta de valor, mercado objetivo y gestión comercial.",
+                "tags": ["marketing", "ingenieria-comercial", "mercado-objetivo"],
+            }
+        ],
+    }
+
+
+def _a2a_error(request_id, code: int, message: str) -> dict:
+    return {"jsonrpc": "2.0", "id": request_id, "error": {"code": code, "message": message}}
+
+
+def _a2a_text(message: dict) -> tuple[str, str]:
+    context_id = str(message.get("contextId") or uuid.uuid4())
+    parts = message.get("parts") or []
+    texts = [part.get("text", "") for part in parts if isinstance(part, dict) and part.get("kind", "text") == "text"]
+    return " ".join(texts).strip(), context_id
+
+
+@app.post("/message/send", tags=["A2A"])
+async def message_send(
+    payload: dict = Body(...), _: None = Depends(validar_token)
+) -> dict:
+    """Recibe una solicitud JSON-RPC A2A message/send."""
+    request_id = payload.get("id")
+    if payload.get("jsonrpc") != "2.0" or payload.get("method") != "message/send":
+        return _a2a_error(request_id, -32600, "Solicitud JSON-RPC message/send no válida.")
+
+    params = payload.get("params") or {}
+    message = params.get("message") or {}
+    text, context_id = _a2a_text(message)
+    if not text:
+        return _a2a_error(request_id, -32602, "El mensaje debe contener una parte de texto.")
+
+    message_id = str(uuid.uuid4())
+    try:
+        response = await consultar_agente(text, context_id)
+    except Exception:
+        return _a2a_error(request_id, -32000, "El agente no pudo procesar la solicitud.")
+
+    return {
+        "jsonrpc": "2.0",
+        "id": request_id,
+        "result": {
+            "id": message_id,
+            "contextId": context_id,
+            "status": {
+                "state": "completed",
+                "message": {
+                    "role": "agent",
+                    "messageId": message_id,
+                    "contextId": context_id,
+                    "parts": [{"kind": "text", "text": response}],
+                },
+            },
+        },
+    }
 
 
 @app.get("/", include_in_schema=False)

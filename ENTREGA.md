@@ -9,7 +9,8 @@ Rama de entrega: `main`.
 ## Implementaciones elegidas
 
 1. Servicio FastAPI protegido mediante token Bearer.
-2. Canal web propio de chat, distinto de WhatsApp Web.
+2. Servicio A2A propio con Agent Card y `message/send`.
+3. Canal web propio de chat, distinto de WhatsApp Web.
 
 Ambas implementaciones reutilizan el agente LangGraph existente y su
 comunicación A2A local.
@@ -96,6 +97,21 @@ URL pública:
 Swagger público:
 
 <https://agente-mk-2026-b4e407e65a92.herokuapp.com/docs>
+
+## Integración A2A para el coordinador
+
+Agent Card:
+
+<https://agente-mk-2026-b4e407e65a92.herokuapp.com/.well-known/agent-card.json>
+
+Endpoint A2A:
+
+<https://agente-mk-2026-b4e407e65a92.herokuapp.com/message/send>
+
+El endpoint recibe JSON-RPC 2.0 con método `message/send` y requiere el
+encabezado `Authorization: Bearer <AGENT_ACCESS_TOKEN>`. El coordinador debe
+guardar ese token como secreto y reenviarlo; no debe exponerse al usuario final.
+También está disponible `GET /salud` para comprobar el estado del servicio.
 
 El despliegue fue verificado con HTTP 200 en `/`, `/health` y `/docs`. También
 se verificó `/chat`: sin token responde `401 Unauthorized` y con el token válido

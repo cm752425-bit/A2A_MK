@@ -1,4 +1,5 @@
 import os
+import uuid
 
 from fastapi.testclient import TestClient
 
@@ -15,6 +16,57 @@ def test_health():
     response = client.get("/health")
     assert response.status_code == 200
     assert response.json()["status"] == "ok"
+
+
+def test_salud():
+    response = client.get("/salud")
+    assert response.status_code == 200
+    assert response.json()["status"] == "ok"
+
+
+def test_agent_card():
+    response = client.get("/.well-known/agent-card.json")
+    body = response.json()
+    assert response.status_code == 200
+    assert body["url"].endswith("/message/send")
+    assert body["skills"]
+
+
+def test_message_send_without_token():
+    payload = {"jsonrpc": "2.0", "id": "1", "method": "message/send", "params": {}}
+    response = client.post("/message/send", json=payload)
+    assert response.status_code == 401
+
+
+def test_message_send(monkeypatch):
+    async def fake_agent(message: str, request_id: str | None = None) -> str:
+        assert message == "consulta A2A"
+        assert request_id
+        return "respuesta A2A"
+
+    monkeypatch.setattr(main, "consultar_agente", fake_agent)
+    context_id = str(uuid.uuid4())
+    payload = {
+        "jsonrpc": "2.0",
+        "id": "1",
+        "method": "message/send",
+        "params": {
+            "message": {
+                "role": "user",
+                "messageId": str(uuid.uuid4()),
+                "contextId": context_id,
+                "parts": [{"kind": "text", "text": "consulta A2A"}],
+            }
+        },
+    }
+    response = client.post(
+        "/message/send", json=payload, headers={"Authorization": "Bearer test-token"}
+    )
+    body = response.json()
+    assert response.status_code == 200
+    assert body["result"]["status"]["state"] == "completed"
+    assert body["result"]["status"]["message"]["parts"][0]["text"] == "respuesta A2A"
+    assert body["result"]["contextId"] == context_id
 
 
 def test_web_client():
